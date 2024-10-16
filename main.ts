@@ -276,6 +276,13 @@ const BlueIndex = aggregateSkins(BlueIndexData)
 const PurpleIndex = aggregateSkins(PurpleIndexData)
 
 
+
+// pegar dia especifico de um indice
+function getDataByDate(dataArray: any[], targetDate: any) {
+  const result = dataArray.find(item => item.date === targetDate);
+  return result || null; // Return the full object or null if not found
+}
+
 // -------------------------------------- //
 // CALCULOS COM O PRECO DE TODAS AS SKINS //
 // -------------------------------------- //
@@ -306,3 +313,11 @@ console.log(`Mediana: ${allSkinsPriceMedian}`)
 console.log(`Moda: ${allSkinsPriceMode}`)
 console.log(`Desvio Padrao: ${allSkinsPriceStdDev}`)
 console.log(`Variancia: ${allSkinsPriceVariance}`)
+
+
+// VER DIA ESPECIFICO DE UM FUNDO
+// por exemplo: 10 de outubro de 2024 do fundo das skins cinzas
+
+const targetDate = "Oct 10 2024 01: +0";
+const result = getDataByDate(GrayIndex, targetDate);
+console.log(result);
