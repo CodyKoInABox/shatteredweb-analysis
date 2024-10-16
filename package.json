@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@mathigon/fermat": "^1.1.22",
+    "statistics.js": "^1.0.0"
+  }
+}
