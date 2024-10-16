@@ -213,8 +213,67 @@ sortArray(allSkinsPrices)
 sortArray(allSkinsAmount)
 
 
-// [{date:, prices[], amounts[]}]
 
+// -------------------------------
+// [{date:, prices[], amounts[]}]
+// -------------------------------
+
+interface OriginalSkinData {
+  date: string;
+  price: number;
+  amount: string;
+}
+
+interface GroupedSkinData {
+  date: string;
+  prices: number[];
+  amounts: string[];
+}
+
+function aggregateSkins(skins: OriginalSkinData[]): GroupedSkinData[] {
+  const grouped: { [key: string]: GroupedSkinData } = {};
+
+  skins.forEach(({ date, price, amount }) => {
+    if (!grouped[date]) {
+      grouped[date] = { date, prices: [], amounts: [] };
+    }
+    grouped[date].prices.push(price);
+    grouped[date].amounts.push(amount);
+  });
+
+  return Object.values(grouped);
+}
+
+
+// ------------- //
+// CRIAR INDICES //
+// ------------- //
+
+// RAW
+// all from collection
+const StMarcIndexData: OriginalSkinData[] = arrayJoin(BambooGarden, Jungle, JungleThicket, Seabird, Surfwood, BananaLeaf, DarkBlossom, RustLeaf, SunsetLily, CrimsonBlossom, DayLily, Sundown, TealBlossom, MidnightLily, SeaCalico, SynthLeaf);
+const CanalsIndexData: OriginalSkinData[] = arrayJoin(BoroqueSand, CanalSpray, Indigo, NavyMurano, StoneMosaico, BaroquePurple, CandyApple, DarkFiligree, OrangeMurano, BaroqueRed, Emerald, OrangeFiligree, VioletMurano, BaroqueOrange, RedFiligree, StainedGlass);
+const NorseIndexData: OriginalSkinData[] = arrayJoin(Barricade, NightBorre, RedStone, Scorched, Tornado, Chainmail, MossQuartz, Pathfinder, Pyre, Brass, CopperBorre, EmeraldQuartz, FrostBorre, AstralJormungandr, EmeraldJormungandr, FlameJormungandr);
+
+// all from color
+const GrayIndexData: OriginalSkinData[] = arrayJoin(BambooGarden, Jungle, JungleThicket, Seabird, Surfwood, BoroqueSand, CanalSpray, Indigo, NavyMurano, StoneMosaico, Barricade, NightBorre, RedStone, Scorched, Tornado);
+const LightblueIndexData: OriginalSkinData[] = arrayJoin(BananaLeaf, DarkBlossom, RustLeaf, SunsetLily, BaroquePurple, CandyApple, DarkFiligree, OrangeMurano, Chainmail, MossQuartz, Pathfinder, Pyre);
+const BlueIndexData: OriginalSkinData[] = arrayJoin(CrimsonBlossom, DayLily, Sundown, TealBlossom, BaroqueRed, Emerald, OrangeFiligree, VioletMurano, Brass, CopperBorre, EmeraldQuartz, FrostBorre);
+const PurpleIndexData: OriginalSkinData[] = arrayJoin(MidnightLily, SeaCalico, SynthLeaf, BaroqueOrange, RedFiligree, StainedGlass, AstralJormungandr, EmeraldJormungandr, FlameJormungandr);
+
+
+
+// AGGREGATED
+// all from collection
+const StMarcIndex = aggregateSkins(StMarcIndexData)
+const CanalsIndex = aggregateSkins(CanalsIndexData)
+const NorseIndex = aggregateSkins(NorseIndexData)
+
+// all from color
+const GrayIndex = aggregateSkins(GrayIndexData)
+const LightblueIndex = aggregateSkins(CanalsIndexData)
+const BlueIndex = aggregateSkins(BlueIndexData)
+const PurpleIndex = aggregateSkins(PurpleIndexData)
 
 
 // -------------------------------------- //
