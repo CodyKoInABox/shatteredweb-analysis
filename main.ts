@@ -315,9 +315,9 @@ console.log(`Desvio Padrao: ${allSkinsPriceStdDev}`)
 console.log(`Variancia: ${allSkinsPriceVariance}`)
 
 
-// VER DIA ESPECIFICO DE UM FUNDO
-// por exemplo: 10 de outubro de 2024 do fundo das skins cinzas
+console.log('--------------------------------------');
 
-const targetDate = "Oct 10 2024 01: +0";
-const result = getDataByDate(GrayIndex, targetDate);
-console.log(result);
+// EXEMPLO: Media de preco de vendas de skins cinzas no dia 10 de outubro de 2024
+const grayoct10 = getDataByDate(GrayIndex, "Oct 10 2024 01: +0");
+const grayoct10Mean = mean(grayoct10.prices);
+console.log(`Media precos skins cinzas dia 10/10/24: ${grayoct10Mean}`)
