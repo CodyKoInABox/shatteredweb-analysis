@@ -3,6 +3,8 @@
 
 import { join } from "https://deno.land/std@0.119.0/path/mod.ts";
 
+import { join as arrayJoin } from '@mathigon/core'
+ 
 // Function to import data from a specific folder path
 async function importDataFromPath(folderPath: string): Promise<any[]> {
   const filePath = join(folderPath, "data.json");
@@ -163,4 +165,35 @@ const EmeraldJormungandr = await importDataFromPath(emeraldJormungandrPath);
 const FlameJormungandr = await importDataFromPath(flameJormungandrPath);
 
 
-console.log(FlameJormungandr);
+
+const allSkins = arrayJoin(
+  // stmarc
+  // gray
+  BambooGarden, Jungle, JungleThicket, Seabird, Surfwood,
+  // lightblue
+  BananaLeaf, DarkBlossom, RustLeaf, SunsetLily,
+  // blue
+  CrimsonBlossom, DayLily, Sundown, TealBlossom,
+  // purple
+  MidnightLily, SeaCalico, SynthLeaf,
+
+  // canals
+  // gray
+  BoroqueSand, CanalSpray, Indigo, NavyMurano, StoneMosaico,
+  // lightblue
+  BaroquePurple, CandyApple, DarkFiligree, OrangeMurano,
+  // blue
+  BaroqueRed, Emerald, OrangeFiligree, VioletMurano,
+  // purple
+  BaroqueOrange, RedFiligree, StainedGlass,
+
+  // norse
+  // gray
+  Barricade, NightBorre, RedStone, Scorched, Tornado,
+  // lightblue
+  Chainmail, MossQuartz, Pathfinder, Pyre,
+  // blue
+  Brass, CopperBorre, EmeraldQuartz, FrostBorre,
+  // purple
+  AstralJormungandr, EmeraldJormungandr, FlameJormungandr
+);
