@@ -213,6 +213,10 @@ sortArray(allSkinsPrices)
 sortArray(allSkinsAmount)
 
 
+// [{date:, prices[], amounts[]}]
+
+
+
 // -------------------------------------- //
 // CALCULOS COM O PRECO DE TODAS AS SKINS //
 // -------------------------------------- //
