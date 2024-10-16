@@ -1,9 +1,10 @@
-// deno-lint-ignore-file no-explicit-any
+// deno-lint-ignore-file no-explicit-any no-unused-vars
 
 
 import { join } from "https://deno.land/std@0.119.0/path/mod.ts";
 
 import { join as arrayJoin } from '@mathigon/core'
+import { mean } from '@mathigon/fermat'
  
 // Function to import data from a specific folder path
 async function importDataFromPath(folderPath: string): Promise<any[]> {
@@ -197,3 +198,16 @@ const allSkins = arrayJoin(
   // purple
   AstralJormungandr, EmeraldJormungandr, FlameJormungandr
 );
+
+
+// extrair dados especificos de todas as skins
+const allSkinsPrices = allSkins.map(skin => skin.price);
+const allSkinsAmount = allSkins.map(skin => skin.amount);
+
+
+
+// MEDIA DE PRECO PARA TODAS AS SKINS
+
+const allSkinsPriceMean = mean(allSkinsPrices);
+
+console.log(allSkinsPriceMean)
