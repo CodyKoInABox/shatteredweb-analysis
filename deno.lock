@@ -32,6 +32,7 @@
     "packageJson": {
       "dependencies": [
         "npm:@mathigon/fermat@^1.1.22",
+        "npm:sort-array@5",
         "npm:statistics.js@1"
       ]
     }

@@ -3,8 +3,10 @@
 
 import { join } from "https://deno.land/std@0.119.0/path/mod.ts";
 
+import sortArray from 'sort-array';
+
 import { join as arrayJoin } from '@mathigon/core'
-import { mean } from '@mathigon/fermat'
+import { mean, median, mode, stdDev, variance } from '@mathigon/fermat'
  
 // Function to import data from a specific folder path
 async function importDataFromPath(folderPath: string): Promise<any[]> {
@@ -200,14 +202,44 @@ const allSkins = arrayJoin(
 );
 
 
+
 // extrair dados especificos de todas as skins
 const allSkinsPrices = allSkins.map(skin => skin.price);
 const allSkinsAmount = allSkins.map(skin => skin.amount);
 
 
+// ordernar as listas acima de menor para maior
+sortArray(allSkinsPrices)
+sortArray(allSkinsAmount)
 
-// MEDIA DE PRECO PARA TODAS AS SKINS
 
+// -------------------------------------- //
+// CALCULOS COM O PRECO DE TODAS AS SKINS //
+// -------------------------------------- //
+
+// media
 const allSkinsPriceMean = mean(allSkinsPrices);
 
-console.log(allSkinsPriceMean)
+
+// mediana
+const allSkinsPriceMedian = median(allSkinsPrices);
+
+// moda
+const allSkinsPriceMode = mode(allSkinsPrices);
+
+// desvio padrao
+const allSkinsPriceStdDev = stdDev(allSkinsPrices);
+
+// variancia
+const allSkinsPriceVariance = variance(allSkinsPrices);
+
+// imprimir todos os dados
+
+console.log('--------------------------------------');
+console.log('CALCULOS COM O PRECO DE TODAS AS SKINS');
+console.log('--------------------------------------');
+console.log(`Media: ${allSkinsPriceMean}`)
+console.log(`Mediana: ${allSkinsPriceMedian}`)
+console.log(`Moda: ${allSkinsPriceMode}`)
+console.log(`Desvio Padrao: ${allSkinsPriceStdDev}`)
+console.log(`Variancia: ${allSkinsPriceVariance}`)
