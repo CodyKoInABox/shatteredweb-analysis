@@ -1,6 +1,9 @@
 {
   "dependencies": {
     "@mathigon/fermat": "^1.1.22",
+    "chart.js": "^4.4.5",
+    "express": "^4.21.1",
+    "regression": "^2.0.1",
     "sort-array": "^5.0.0",
     "statistics.js": "^1.0.0"
   }

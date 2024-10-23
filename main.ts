@@ -264,16 +264,20 @@ const PurpleIndexData: OriginalSkinData[] = arrayJoin(MidnightLily, SeaCalico, S
 
 
 // AGGREGATED
+
+// all skins
+export const AllSkinsIndex = aggregateSkins(allSkins)
+
 // all from collection
-const StMarcIndex = aggregateSkins(StMarcIndexData)
-const CanalsIndex = aggregateSkins(CanalsIndexData)
-const NorseIndex = aggregateSkins(NorseIndexData)
+export const StMarcIndex = aggregateSkins(StMarcIndexData)
+export const CanalsIndex = aggregateSkins(CanalsIndexData)
+export const NorseIndex = aggregateSkins(NorseIndexData)
 
 // all from color
-const GrayIndex = aggregateSkins(GrayIndexData)
-const LightblueIndex = aggregateSkins(CanalsIndexData)
-const BlueIndex = aggregateSkins(BlueIndexData)
-const PurpleIndex = aggregateSkins(PurpleIndexData)
+export const GrayIndex = aggregateSkins(GrayIndexData)
+export const LightblueIndex = aggregateSkins(CanalsIndexData)
+export const BlueIndex = aggregateSkins(BlueIndexData)
+export const PurpleIndex = aggregateSkins(PurpleIndexData)
 
 
 
@@ -282,6 +286,18 @@ function getDataByDate(dataArray: any[], targetDate: any) {
   const result = dataArray.find(item => item.date === targetDate);
   return result || null; // Return the full object or null if not found
 }
+
+
+// MATH
+
+
+function CoefficientOfVariation(data: any[]){
+
+  return stdDev(data) / mean(data);
+
+}
+
+// MATH END
 
 // -------------------------------------- //
 // CALCULOS COM O PRECO DE TODAS AS SKINS //
@@ -303,6 +319,9 @@ const allSkinsPriceStdDev = stdDev(allSkinsPrices);
 // variancia
 const allSkinsPriceVariance = variance(allSkinsPrices);
 
+// coeficiente de variação
+const allSkinsCoefficientOfVariation = CoefficientOfVariation(allSkinsPrices);
+
 // imprimir todos os dados
 
 console.log('--------------------------------------');
@@ -313,6 +332,7 @@ console.log(`Mediana: ${allSkinsPriceMedian}`)
 console.log(`Moda: ${allSkinsPriceMode}`)
 console.log(`Desvio Padrao: ${allSkinsPriceStdDev}`)
 console.log(`Variancia: ${allSkinsPriceVariance}`)
+console.log(`Coeficiente de variação: ${allSkinsCoefficientOfVariation}`)
 
 
 console.log('--------------------------------------');
