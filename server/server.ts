@@ -46,28 +46,17 @@ function linearRegression(data: number[], months: number): number[] {
   return projection;
 }
 
-// Function to remove outliers using Z-score
-function removeOutliers(data: number[], threshold: number = 3): number[] {
-  const mean = data.reduce((sum, value) => sum + value, 0) / data.length;
-  const stdDev = Math.sqrt(data.reduce((sum, value) => sum + (value - mean) ** 2, 0) / data.length);
-  
-  return data.filter(value => Math.abs((value - mean) / stdDev) <= threshold);
-}
-
 // Function to serve the HTML chart for a given index
 async function serveChart(context: any, indexData: any[], indexName: string) {
   const prices = indexData.map(item => item.prices.reduce((a: any, b: any) => a + b, 0) / item.prices.length);
   const filteredPrices = prices.slice(0, -30); // Exclude last 30 days
   const labels = indexData.map(item => item.date).slice(0, -30); // Adjust labels accordingly
 
-  // Remove outliers from the filtered prices
-  const cleanedPrices = removeOutliers(filteredPrices);
-  
   // Calculate moving averages
-  const movingAverage7Days = calculateMovingAverage(cleanedPrices, 7);
-  const movingAverage30Days = calculateMovingAverage(cleanedPrices, 30);
-  const movingAverage180Days = calculateMovingAverage(cleanedPrices, 180);
-  const movingAverage365Days = calculateMovingAverage(cleanedPrices, 365);
+  const movingAverage7Days = calculateMovingAverage(filteredPrices, 7);
+  const movingAverage30Days = calculateMovingAverage(filteredPrices, 30);
+  const movingAverage180Days = calculateMovingAverage(filteredPrices, 180);
+  const movingAverage365Days = calculateMovingAverage(filteredPrices, 365);
   
   // Serve an HTML page that includes Chart.js and displays the data
   context.response.body = `
@@ -84,7 +73,7 @@ async function serveChart(context: any, indexData: any[], indexName: string) {
         <script>
           const data = ${JSON.stringify(indexData)};
           const labels = ${JSON.stringify(labels)};
-          const prices = ${JSON.stringify(cleanedPrices)};
+          const prices = ${JSON.stringify(filteredPrices)};
           const movingAverage7Days = ${JSON.stringify(movingAverage7Days)};
           const movingAverage30Days = ${JSON.stringify(movingAverage30Days)};
           const movingAverage180Days = ${JSON.stringify(movingAverage180Days)};
@@ -148,12 +137,11 @@ async function serveChart(context: any, indexData: any[], indexName: string) {
 // Function to serve projection for a given index
 async function serveProjection(context: any, indexData: any[], indexName: string) {
     const prices = indexData.map(item => item.prices.reduce((a: any, b: any) => a + b, 0) / item.prices.length);
-    const cleanedPrices = removeOutliers(prices); // Remove outliers from prices
-    const movingAverage = calculateMovingAverage(cleanedPrices, 30); // Using 30 days moving average for projection
-    const projection = linearRegression(cleanedPrices, 12);
+    const movingAverage = calculateMovingAverage(prices, 30); // Using 30 days moving average for projection
+    const projection = linearRegression(prices, 12);
     
     // Generate past price labels and projection labels
-    const pastLabels = cleanedPrices.map((_, i) => `Day ${i + 1}`); // Generate labels for past prices
+    const pastLabels = prices.map((_, i) => `Day ${i + 1}`); // Generate labels for past prices
     const projectionLabels = Array.from({ length: 12 }, (_, i) => `Month ${i + 1}`); // Generate projection labels
   
     // Serve an HTML page that includes Chart.js and displays the projection
@@ -169,7 +157,7 @@ async function serveProjection(context: any, indexData: any[], indexName: string
       <body>
           <canvas id="${indexName}ProjectionChart" width="400" height="200"></canvas>
           <script>
-            const pastPrices = ${JSON.stringify(cleanedPrices)};
+            const pastPrices = ${JSON.stringify(prices)};
             const movingAverage = ${JSON.stringify(movingAverage)};
             const projection = ${JSON.stringify(projection)};
             const projectionLabels = ${JSON.stringify(projectionLabels)};
@@ -197,9 +185,9 @@ async function serveProjection(context: any, indexData: any[], indexName: string
                   fill: false,
                   pointRadius: 0, // Disable the dots
                 }, {
-                  label: 'Projection',
+                  label: '12-Month Projection',
                   data: projection,
-                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderColor: 'rgba(255, 165, 0, 1)', // Orange for projection
                   borderWidth: 2,
                   fill: false,
                   pointRadius: 0, // Disable the dots
@@ -207,7 +195,7 @@ async function serveProjection(context: any, indexData: any[], indexName: string
               },
               options: {
                 scales: {
-                  x: { title: { display: true, text: 'Days / Months' } },
+                  x: { title: { display: true, text: 'Time' } },
                   y: { title: { display: true, text: 'Price' } }
                 }
               }
@@ -216,26 +204,70 @@ async function serveProjection(context: any, indexData: any[], indexName: string
       </body>
       </html>
     `;
-}
+  }
+  
 
-// Routes for serving different index charts and projections
-router.get("/chart/all-skins", (context) => serveChart(context, AllSkinsIndex, "All Skins"));
-router.get("/chart/st-marc", (context) => serveChart(context, StMarcIndex, "St Marc"));
-router.get("/chart/canals", (context) => serveChart(context, CanalsIndex, "Canals"));
-router.get("/chart/norse", (context) => serveChart(context, NorseIndex, "Norse"));
-router.get("/chart/gray", (context) => serveChart(context, GrayIndex, "Gray"));
-router.get("/chart/lightblue", (context) => serveChart(context, LightblueIndex, "Lightblue"));
-router.get("/chart/blue", (context) => serveChart(context, BlueIndex, "Blue"));
-router.get("/chart/purple", (context) => serveChart(context, PurpleIndex, "Purple"));
+// Route for AllSkinsIndex
+router.get("/all-skins", async (context) => {
+  await serveChart(context, AllSkinsIndex, "AllSkins");
+});
 
-// Routes for serving projections
-router.get("/projection/all-skins", (context) => serveProjection(context, AllSkinsIndex, "All Skins"));
-router.get("/projection/st-marc", (context) => serveProjection(context, StMarcIndex, "St Marc"));
-router.get("/projection/canals", (context) => serveProjection(context, CanalsIndex, "Canals"));
-router.get("/projection/norse", (context) => serveProjection(context, NorseIndex, "Norse"));
-router.get("/projection/gray", (context) => serveProjection(context, GrayIndex, "Gray"));
-router.get("/projection/lightblue", (context) => serveProjection(context, LightblueIndex, "Lightblue"));
-router.get("/projection/blue", (context) => serveProjection(context, BlueIndex, "Blue"));
-router.get("/projection/purple", (context) => serveProjection(context, PurpleIndex, "Purple"));
+// Route for PurpleIndex
+router.get("/purple", async (context) => {
+  await serveChart(context, PurpleIndex, "PurpleIndex");
+});
 
-export { router };
+// Route for PurpleIndex Projection
+router.get("/purple/projection", async (context) => {
+  await serveProjection(context, PurpleIndex, "PurpleIndex");
+});
+
+// Similar routes for other indices
+router.get("/stmarc", async (context) => {
+  await serveChart(context, StMarcIndex, "StMarc");
+});
+router.get("/stmarc/projection", async (context) => {
+  await serveProjection(context, StMarcIndex, "StMarc");
+});
+
+router.get("/canals", async (context) => {
+  await serveChart(context, CanalsIndex, "Canals");
+});
+router.get("/canals/projection", async (context) => {
+  await serveProjection(context, CanalsIndex, "Canals");
+});
+
+router.get("/norse", async (context) => {
+  await serveChart(context, NorseIndex, "Norse");
+});
+router.get("/norse/projection", async (context) => {
+  await serveProjection(context, NorseIndex, "Norse");
+});
+
+router.get("/gray", async (context) => {
+  await serveChart(context, GrayIndex, "Gray");
+});
+router.get("/gray/projection", async (context) => {
+  await serveProjection(context, GrayIndex, "Gray");
+});
+
+router.get("/lightblue", async (context) => {
+  await serveChart(context, LightblueIndex, "Lightblue");
+});
+router.get("/lightblue/projection", async (context) => {
+  await serveProjection(context, LightblueIndex, "Lightblue");
+});
+
+router.get("/blue", async (context) => {
+  await serveChart(context, BlueIndex, "Blue");
+});
+router.get("/blue/projection", async (context) => {
+  await serveProjection(context, BlueIndex, "Blue");
+});
+
+// Initialize and start the application
+const app = new Application();
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+await app.listen({ port: 8000 });
