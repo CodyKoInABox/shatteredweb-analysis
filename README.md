@@ -1,6 +1,6 @@
 # Financial analysis of the skins from CS:GO's Shattered Web Operation
 #### also a math assignment for college
-
+#### Presentation: https://www.canva.com/design/DAGUaXUhLKo/RXbcU4sxBAhFPnJ3B9eYBA/edit?utm_content=DAGUaXUhLKo&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
 ----------
 
 ## To run:
